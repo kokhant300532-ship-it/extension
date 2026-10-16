@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercado Libre - Secure Cyber Defense Node</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Plus Jakarta Sans Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        cyber: {
+                            yellow: '#FFE600',
+                            yellowDark: '#D4BF00',
+                            yellowLight: '#FFF9C4',
+                            cardBg: '#FFFFFF',
+                            cardBorder: '#CBD5E1',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0b0f19 0%, #1e1b4b 60%, #311042 100%) !important;
+            min-height: 100vh;
+        }
+
+        .clean-glow {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 
+                        0 0 20px 0 rgba(255, 230, 0, 0.15);
+        }
+
+        .cyber-grid {
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        @keyframes pulseNeon {
+            0%, 100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 4px rgba(212, 191, 0, 0.4)); }
+            50% { opacity: 0.7; transform: scale(0.96); filter: drop-shadow(0 0 1px rgba(212, 191, 0, 0.2)); }
+        }
+
+        .animate-pulse-neon {
+            animation: pulseNeon 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        .button-cyber {
+            background: linear-gradient(135deg, #FFE600 0%, #E6D000 100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .button-cyber:hover {
+            background: linear-gradient(135deg, #FFF04D 0%, #FFE600 100%);
+            box-shadow: 0 6px 20px rgba(255, 230, 0, 0.35);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="cyber-grid min-h-screen flex items-center justify-center p-4 relative font-sans antialiased text-slate-800 overflow-x-auto">
+
+    <!-- Fixed Side-by-Side Flex Container -->
+    <div class="flex flex-row items-start justify-center gap-6 z-10 py-6 min-w-max mx-auto">
+
+        <!-- Live Control Panel (ဘယ်ဘက်ခြမ်း) -->
+        <div class="w-[380px] bg-slate-900/95 backdrop-blur-md border border-slate-700 rounded-xl p-5 shadow-2xl text-xs text-slate-200 space-y-3.5 shrink-0">
+            <div class="font-bold text-amber-400 border-b border-slate-800 pb-2 flex items-center justify-between text-sm">
+                <span>⚙️ Live Control Setting</span>
+                <span class="text-[10px] text-slate-400 font-mono">Real-time Editor</span>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                    <label class="block text-[10px] text-slate-400 mb-1">အချိန် (နာရီ:မိနစ်:စက္ကန့်)</label>
+                    <input type="text" id="ctrlTime" value="23:59:53" oninput="updateTimeLive()" class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 font-mono text-white text-center focus:outline-none focus:ring-1 focus:ring-amber-400">
+                </div>
+                <div>
+                    <label class="block text-[10px] text-slate-400 mb-1">ID Number</label>
+                    <input type="text" id="ctrlId" value="58495258" oninput="updateIdLive()" class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 font-mono text-white text-center focus:outline-none focus:ring-1 focus:ring-amber-400">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-[10px] text-slate-400 mb-1">ခေါင်းစဉ်ကြီး (Main Heading)</label>
+                <input type="text" id="ctrlHeading" value="Restricción Temporal Detectada" oninput="updateHeadingLive()" class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white focus:outline-none focus:ring-1 focus:ring-amber-400">
+            </div>
+
+            <div>
+                <label class="block text-[10px] text-slate-400 mb-1">အသေးစိတ် ဖော်ပြချက် (Description)</label>
+                <textarea id="ctrlDesc" rows="4" oninput="updateDescLive()" class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white focus:outline-none focus:ring-1 focus:ring-amber-400 text-[11px] leading-relaxed">El protocolo de seguridad de Mercado Libre ha prorrogado por 24 horas el plazo para completar la verificación de identidad y eliminar limitaciones de cuenta.</textarea>
+            </div>
+        </div>
+
+        <!-- Security Modal Card (ညာဘက်ခြမ်း) -->
+        <div id="modalCard" class="w-[420px] bg-white rounded-xl border border-slate-300 clean-glow overflow-hidden transition-all duration-500 shadow-2xl shrink-0">
+            
+            <!-- Top Tech Header Bar -->
+            <div class="px-5 py-3.5 bg-slate-100 border-b border-slate-200 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-700 animate-pulse-neon">
+                        <i data-lucide="shield-alert" class="w-3.5 h-3.5 stroke-[2.5]"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-extrabold tracking-wider text-[11px] uppercase text-slate-900">MERCADO LIBRE</span>
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+                        </div>
+                        <span class="text-[9px] text-slate-500 font-mono tracking-widest block leading-none">SYS_NODE // SEC_OVERRIDE</span>
+                    </div>
+                </div>
+
+                <button onclick="dismissModal()" class="w-7 h-7 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-600 hover:text-slate-900 flex items-center justify-center transition-colors border border-slate-300 focus:outline-none focus:ring-1 focus:ring-amber-400">
+                    <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                </button>
+            </div>
+
+            <!-- Body Content -->
+            <div class="p-5 sm:p-6 space-y-4 bg-slate-50/70">
+                
+                <!-- Live Threat Status Header -->
+                <div class="flex items-center justify-between bg-amber-50 border border-amber-200 rounded-xl p-3 shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-800 shrink-0 shadow-sm">
+                            <i data-lucide="cpu" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <div class="text-[9px] font-mono text-amber-900 uppercase tracking-widest font-bold">Control de Riesgos Activo</div>
+                            <div class="text-[11px] text-slate-600 font-medium">Plazo de validación extendido</div>
+                        </div>
+                    </div>
+                    <div class="text-right font-mono font-bold text-amber-950 text-xs bg-amber-100 px-2.5 py-1 rounded-lg border border-amber-300 tracking-wider shadow-inner" id="countdown">
+                        23:59:53
+                    </div>
+                </div>
+
+                <!-- Main Notice Heading & Icon -->
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-slate-200/70 border border-slate-300 text-[10px] font-mono text-slate-700 shadow-sm">
+                            <i data-lucide="terminal" class="w-3 h-3 text-amber-600"></i>
+                            <span>DEPARTAMENTO_DE_SISTEMAS</span>
+                        </div>
+                        <!-- ID Number Display beside heading -->
+                        <span id="displayIdBadge" class="text-[11px] font-mono font-bold text-amber-900 bg-amber-100 px-2.5 py-0.5 rounded-md border border-amber-200 shadow-sm">ID: 58495258</span>
+                    </div>
+                    <h1 id="displayHeading" class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 leading-snug">
+                        Restricción Temporal Detectada
+                    </h1>
+                </div>
+
+                <!-- Description Box -->
+                <div class="bg-white rounded-xl p-4 border border-slate-200 space-y-2.5 text-slate-600 text-xs leading-relaxed shadow-sm">
+                    <p id="displayDesc">
+                        El protocolo de seguridad de <strong class="text-slate-900 font-semibold">Mercado Libre</strong> ha prorrogado por <span class="text-amber-700 font-bold font-mono">24 horas</span> el plazo para completar la verificación de identidad y eliminar limitaciones de cuenta.
+                    </p>
+                    <div class="flex items-center gap-2 pt-2 border-t border-slate-100 text-[11px] text-slate-500">
+                        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i>
+                        <span>Evita la suspensión permanente validando tus credenciales ahora.</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons (Confirmar) -->
+                <div class="space-y-2 pt-1">
+                    <button onclick="handleAction()" class="w-full button-cyber text-slate-950 font-extrabold py-3 px-5 rounded-xl flex items-center justify-center gap-2 text-xs tracking-wide shadow-md group focus:outline-none focus:ring-2 focus:ring-amber-300">
+                        <span>Confirmar</span>
+                        <i data-lucide="arrow-right" class="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1 stroke-[2.5]"></i>
+                    </button>
+
+                    <button onclick="dismissModal()" class="w-full py-2 text-[11px] font-semibold text-slate-500 hover:text-slate-800 transition-colors text-center font-mono tracking-wider">
+                        [ DESCARTAR POR AHORA ]
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Cyberpunk Toast Notification -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white border border-amber-400/50 text-xs px-5 py-3 rounded-xl shadow-2xl opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2.5 backdrop-blur-xl z-50">
+        <div class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></div>
+        <span id="toastMessage" class="font-mono tracking-wide">Acción procesada con éxito.</span>
+    </div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Countdown Timer Logic
+        let secondsLeft = 86393; // 23h 59m 53s
+        const countdownEl = document.getElementById('countdown');
+        let timerInterval = null;
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (secondsLeft > 0) {
+                    secondsLeft--;
+                    updateCountdownDisplay();
+                }
+            }, 1000);
+        }
+
+        function updateCountdownDisplay() {
+            const h = String(Math.floor(secondsLeft / 3600)).padStart(2, '0');
+            const m = String(Math.floor((secondsLeft % 3600) / 60)).padStart(2, '0');
+            const s = String(secondsLeft % 60).padStart(2, '0');
+            countdownEl.innerText = `${h}:${m}:${s}`;
+        }
+
+        // Real-Time Live Updates Logic
+        function updateTimeLive() {
+            const timeVal = document.getElementById('ctrlTime').value.trim();
+            const parts = timeVal.split(':');
+            if (parts.length === 3) {
+                const h = parseInt(parts[0]) || 0;
+                const m = parseInt(parts[1]) || 0;
+                const s = parseInt(parts[2]) || 0;
+                secondsLeft = (h * 3600) + (m * 60) + s;
+                updateCountdownDisplay();
+                startTimer();
+            }
+        }
+
+        function updateIdLive() {
+            const idVal = document.getElementById('ctrlId').value;
+            document.getElementById('displayIdBadge').innerText = `ID: ${idVal}`;
+        }
+
+        function updateHeadingLive() {
+            const headingVal = document.getElementById('ctrlHeading').value;
+            document.getElementById('displayHeading').innerText = headingVal;
+        }
+
+        function updateDescLive() {
+            const descVal = document.getElementById('ctrlDesc').value;
+            const descP = document.getElementById('displayDesc');
+            descP.innerHTML = `${descVal} <div class="flex items-center gap-2 pt-2 border-t border-slate-100 text-[11px] text-slate-500 mt-2"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i><span>Evita la suspensión permanente validando tus credenciales ahora.</span></div>`;
+            lucide.createIcons();
+        }
+
+        // Initialize Timer on Load
+        startTimer();
+
+        // Toast Helper
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMessage');
+            toastMsg.innerText = msg;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            toast.classList.add('opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 3500);
+        }
+
+        // Actions
+        function handleAction() {
+            showToast('Conectando con el nodo seguro de Mercado Libre...');
+        }
+
+        function dismissModal() {
+            const card = document.getElementById('modalCard');
+            card.style.transform = 'scale(0.92) translateY(20px)';
+            card.style.opacity = '0';
+            setTimeout(() => {
+                showToast('Nodo minimizado. Recarga para reabrir.');
+            }, 300);
+        }
+    </script>
+</body>
+</html>
